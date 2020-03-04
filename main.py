@@ -1,6 +1,7 @@
 from machine import UART
 import time
 import pycom
+import sys
 
 # this uses the UART_1 default pins for TXD and RXD (``P3`` and ``P4``)
 uart = UART(0, baudrate=115200)
@@ -18,26 +19,28 @@ def set_led_to(color=GREEN):
     pycom.rgbled(color)
 
 
-set_led_to(GREEN)
-
-my_file = open("/flash/output.txt", "w")
-my_file.write("ASDASDASD")
-for i in range(5):
+set_led_to(RED)
+'''
+while True:
     if uart.any():
-        local_color = 0x7F7F7F
         incoming_message = uart.readline()
-        my_file.write(incoming_message)
-        my_file.write("asdasd")
-        if incoming_message == '0\n':
-            local_color = RED
-        elif incoming_message == '1\n':
-            local_color = GREEN
-        #file.write(incoming_message)
         if isOn:
             set_led_to(OFF)
         else:
-            set_led_to(local_color)
+            set_led_to(GREEN)
         isOn = not isOn
     time.sleep(0.25)
+'''
 
-my_file.close()
+try:
+    while True:
+        value_in = sys.stdin.read(1)
+        
+        if value_in == "1":
+            set_led_to(GREEN)
+        elif value_in == "0":
+            set_led_to(OFF)
+
+
+except (KeyboardInterrupt, SystemExit):
+    raise

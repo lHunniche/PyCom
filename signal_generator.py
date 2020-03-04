@@ -1,10 +1,10 @@
 import serial
 import time
 
-ser = serial.Serial()
-ser.port='COM5'
-ser.open()
+serial_out = serial.Serial(port = "COM5", baudrate = 115200)
+serial_in = serial.Serial(port = "COM6", baudrate = 115200)
 
+'''
 sendZero = True
 while True:
     if sendZero:
@@ -15,5 +15,39 @@ while True:
         print("Sent 1")
     sendZero = not sendZero
     time.sleep(0.25)
+'''
+
+def double_sleep_to_hertz(seconds):
+    time.sleep((1/2)/seconds)
+
+def send(value):
+    start_time = time.time_ns()
+    serial_out.write('{}'.format(value).encode('utf-8'))
+    print("Sent a: ", str(value))
+    return start_time
+
+def receive():
+    input_from_serial = serial_in.read().decode('utf-8')
+    end_time = time.time_ns()
+    print("Received a:", str(input_from_serial))
+    return end_time
+
+
+for _ in range(100):
+
+    send_stamp = send(0)
+    receive_stamp = receive()
+    print("Sent and received a 0")
+
+    send_stamp = send(1)
+    receive_stamp = receive()
+    print("Sent and received a 1")
+    
+    #send(0)
+    #double_sleep_to_hertz(10)
+    #send(1)
+    #double_sleep_to_hertz(10)
+    
+
 
  
