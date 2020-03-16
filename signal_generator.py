@@ -27,30 +27,31 @@ def send(value):
     return start_time
 
 def receive():
-    input_from_serial = serial_in.read().decode('utf-8')
+    input_from_serial = serial_in.readline().decode('utf-8')
     end_time = time.time_ns()
-    print("Received a:", str(input_from_serial))
+    print(str("Received a:"), str(input_from_serial))
     return end_time
 
 def log_stamps(send, receive):
     log_file.write(str(send))
+    log_file.write(", ")
     log_file.write(str(receive))
     log_file.write("\n")
+    log_file.flush()
 
 
-log_file = open("latency_log.csv")
-log_file.open()
+log_file = open("latency_log.csv", 'w')
 
 for _ in range(100):
-    send_stamp = send(0)
-    receive_stamp = receive()
-    print("Sent and received a 0")
-    log_stamps(send_stamp, receive_stamp)
-
     send_stamp = send(1)
     receive_stamp = receive()
-    print("Sent and received a 1")
+    time.sleep(1)
     log_stamps(send_stamp, receive_stamp)
+
+    send_stamp = send(0)
+    receive_stamp = receive()
+    log_stamps(send_stamp, receive_stamp)
+    time.sleep(1)
     
     #send(0)
     #double_sleep_to_hertz(10)

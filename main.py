@@ -19,7 +19,7 @@ def set_led_to(color=GREEN):
     pycom.rgbled(color)
 
 
-set_led_to(RED)
+set_led_to(OFF)
 '''
 while True:
     if uart.any():
@@ -37,7 +37,7 @@ try:
         value_in = sys.stdin.read(1)
         
         if value_in == "1":
-            set_led_to(GREEN)
+            set_led_to(OFF)
         elif value_in == "0":
             set_led_to(OFF)
 
